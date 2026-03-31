@@ -1,0 +1,302 @@
+/* ============================================================
+   animations.css — AnomalyIQ Keyframes & Animation Classes
+   pulse-glow · pulse-anomaly · shimmer · slide-in-up · fade-in
+   needle-spin · skeleton · animate-in
+   ============================================================ */
+
+/* ── Keyframes ───────────────────────────────────────────── */
+
+/* Glow pulse — accent color */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 6px  rgba(156,111,255, 0.30),
+      0 0 12px rgba(156,111,255, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 14px rgba(156,111,255, 0.60),
+      0 0 28px rgba(156,111,255, 0.30);
+  }
+}
+
+/* Glow pulse — anomaly/fraud color */
+@keyframes pulse-anomaly {
+  0%, 100% {
+    box-shadow:
+      0 0 8px  rgba(255,64,129, 0.30),
+      0 0 16px rgba(255,64,129, 0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 16px rgba(255,64,129, 0.70),
+      0 0 32px rgba(255,64,129, 0.35);
+  }
+}
+
+/* Glow pulse — normal/safe color */
+@keyframes pulse-normal {
+  0%, 100% {
+    box-shadow:
+      0 0 6px  rgba(105,252,255, 0.25),
+      0 0 12px rgba(105,252,255, 0.10);
+  }
+  50% {
+    box-shadow:
+      0 0 12px rgba(105,252,255, 0.60),
+      0 0 24px rgba(105,252,255, 0.25);
+  }
+}
+
+/* Shimmer — for skeleton/loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Slide in from below */
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide in from the right */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Basic fade */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Fade out */
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Rotation — used for spinner */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Needle rotation — for risk meter speedometer */
+@keyframes needle-spin {
+  from { transform: rotate(var(--from-deg, -120deg)); }
+  to   { transform: rotate(var(--to-deg, 60deg)); }
+}
+
+/* Breathing scale — for globe injected points */
+@keyframes breathe-scale {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.15); }
+}
+
+/* Dot blink */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.2; }
+}
+
+/* Score counter up */
+@keyframes count-up {
+  from { opacity: 0.3; transform: scale(0.95); }
+  to   { opacity: 1;   transform: scale(1); }
+}
+
+/* Chart grow-in */
+@keyframes chart-grow {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+/* Bounce in */
+@keyframes bounce-in {
+  0%   { opacity: 0; transform: scale(0.7); }
+  60%  { opacity: 1; transform: scale(1.05); }
+  80%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+/* Float up and fade for feed items */
+@keyframes feed-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Typing cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { border-right-color: var(--accent); }
+  50%      { border-right-color: transparent; }
+}
+
+/* ── Animation Classes ────────────────────────────────────── */
+
+/* Apply slide-in on mount */
+.animate-in {
+  animation: slide-in-up 0.3s ease forwards;
+}
+
+/* Stagger children animations */
+.animate-in-stagger > * {
+  animation: slide-in-up 0.3s ease both;
+}
+
+.animate-in-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.animate-in-stagger > *:nth-child(2) { animation-delay: 60ms; }
+.animate-in-stagger > *:nth-child(3) { animation-delay: 120ms; }
+.animate-in-stagger > *:nth-child(4) { animation-delay: 180ms; }
+.animate-in-stagger > *:nth-child(5) { animation-delay: 240ms; }
+.animate-in-stagger > *:nth-child(6) { animation-delay: 300ms; }
+
+/* Continuous accent glow */
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Continuous fraud/anomaly glow */
+.pulse-anomaly {
+  animation: pulse-anomaly 1.5s ease-in-out infinite;
+}
+
+/* Continuous safe/normal glow */
+.pulse-normal {
+  animation: pulse-normal 2s ease-in-out infinite;
+}
+
+/* Fade in utility */
+.fade-in {
+  animation: fade-in 0.25s ease forwards;
+}
+
+/* Bounce in on appearance */
+.bounce-in {
+  animation: bounce-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Feed item entrance */
+.feed-enter {
+  animation: feed-enter 0.3s ease forwards;
+}
+
+/* Spinning element */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Breathing globe point */
+.breathe {
+  animation: breathe-scale 2s ease-in-out infinite;
+}
+
+/* ── Skeleton Loading ─────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--surface-up)    25%,
+    rgba(60, 55, 100, 0.5) 50%,
+    var(--surface-up)    75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--r-sm);
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+.skeleton * {
+  visibility: hidden;
+}
+
+/* Skeleton presets */
+.skeleton-text {
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skeleton-text.wide  { width: 80%; }
+.skeleton-text.med   { width: 55%; }
+.skeleton-text.short { width: 35%; }
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+.skeleton-card {
+  height: 80px;
+  border-radius: var(--r-lg);
+}
+
+/* ── Transition Utilities ─────────────────────────────────── */
+.transition-all    { transition: all var(--t-base); }
+.transition-fast   { transition: all var(--t-fast); }
+.transition-slow   { transition: all var(--t-slow); }
+.transition-color  { transition: color var(--t-fast), background-color var(--t-fast); }
+.transition-shadow { transition: box-shadow var(--t-base); }
+.transition-transform { transition: transform var(--t-base); }
+
+/* ── Hover micro-animations ─────────────────────────────────  */
+.hover-lift {
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-accent);
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+/* ── Risk Meter Needle ─────────────────────────────────────── */
+.risk-needle {
+  transform-origin: center bottom;
+  transition: transform 0.8s cubic-bezier(0.34, 1.20, 0.64, 1);
+}
+
+/* ── Verdict badge pulse on load ──────────────────────────── */
+.verdict-badge-appear {
+  animation: bounce-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ── Score bars animate in ────────────────────────────────── */
+.score-bar-animate {
+  animation: chart-grow 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ── Typing effect ────────────────────────────────────────── */
+.typing-cursor {
+  border-right: 2px solid var(--accent);
+  animation: cursor-blink 0.8s ease infinite;
+}

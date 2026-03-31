@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="AnomalyIQ — AI-powered fraud detection with 4-model ML ensemble, graph intelligence, and explainable AI for financial forensics." />
+  <title>AnomalyIQ — AI Fraud Detection</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet" />
+
+  <!-- AnomalyIQ CSS -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+
+  <!-- Three.js r128 + OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <!-- Chart.js 4 -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- jsPDF 2 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Vis-Network for Fraud Rings -->
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- ══════════════════════════════════════════════════════
+       SIDEBAR
+       ══════════════════════════════════════════════════════ -->
+    <aside id="sidebar">
+      <!-- Logo -->
+      <div class="sidebar-logo">
+        <img src="assets/logo.svg" alt="AnomalyIQ" width="170" />
+      </div>
+
+      <!-- Navigation -->
+      <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+        <div class="nav-group-label">Detection</div>
+
+        <a class="nav-item active" data-section="upload" id="nav-upload" role="button" tabindex="0"
+          aria-label="Upload dataset">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          Upload Dataset
+        </a>
+
+        <a class="nav-item" data-section="testdataset" data-requires-session="true" id="nav-testdataset" role="button"
+          tabindex="0" aria-label="Test Dataset">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Test Dataset
+        </a>
+
+        <a class="nav-item" data-section="dashboard" data-requires-session="true" id="nav-dashboard" role="button"
+          tabindex="0" aria-label="Dashboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Dashboard
+        </a>
+
+        <a class="nav-item" data-section="predictor" data-requires-session="true" id="nav-predictor" role="button"
+          tabindex="0" aria-label="Custom predictor">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          Predictor
+        </a>
+
+        <a class="nav-item" data-section="simulator" data-requires-session="true" id="nav-simulator" role="button"
+          tabindex="0" aria-label="Transaction simulator">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="6 3 20 12 6 21" />
+          </svg>
+          Simulator
+        </a>
+
+        <div class="nav-group-label">Intelligence</div>
+
+        <a class="nav-item" data-section="globe" data-requires-session="true" id="nav-globe" role="button" tabindex="0"
+          aria-label="3D Globe visualization">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />
+          </svg>
+          3D Globe
+        </a>
+
+        <a class="nav-item" data-section="insight" data-requires-session="true" id="nav-insight" role="button"
+          tabindex="0" aria-label="AI Insight report">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+          </svg>
+          AI Insight
+        </a>
+
+        <a class="nav-item" data-section="investigation" data-requires-session="true" id="nav-investigation" role="button" tabindex="0"
+          aria-label="Investigation Queue">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.974 0-5.699-.877-7.843-2.418" />
+          </svg>
+          Active Threats
+        </a>
+
+        <a class="nav-item" data-section="blacklist" data-requires-session="true" id="nav-blacklist" role="button" tabindex="0"
+          aria-label="Organizational Blacklist">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+          </svg>
+          Org Blacklist
+        </a>
+
+        <a class="nav-item" data-section="audit" data-requires-session="true" id="nav-audit" role="button" tabindex="0"
+          aria-label="Audit trail">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          Audit Trail
+        </a>
+      </nav>
+
+      <!-- Footer: Session Badge -->
+      <div class="sidebar-footer">
+        <div class="session-badge">
+          <span class="session-label">Session</span>
+          <span id="sb-session-id" class="session-id-display">No session</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ══════════════════════════════════════════════════════
+       MAIN
+       ══════════════════════════════════════════════════════ -->
+    <main id="main">
+      <!-- Top Bar -->
+      <header id="topbar">
+        <div class="topbar-left">
+          <span class="topbar-title" id="topbar-section-title">Upload Dataset</span>
+        </div>
+        <div class="topbar-right">
+          <div class="topbar-session-chip">
+            Session: <span id="topbar-session-id" class="chip-id">—</span>
+          </div>
+          <div class="connection-dot" id="connection-dot" title="Backend connection status">
+            API
+          </div>
+        </div>
+      </header>
+
+      <!-- Sections Container -->
+      <div id="sections-container">
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: UPLOAD
+           ══════════════════════════════════════════════════ -->
+        <section class="section active" id="section-upload" aria-label="Upload dataset">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Train Your Model</h2>
+              <p>Upload a CSV dataset or try the built-in synthetic fraud demo — 2,000 transactions, ~8% fraud rate.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" style="gap:var(--sp-8);align-items:start">
+            <!-- Left: Drop zone + mapper -->
+            <div>
+              <!-- Upload form area -->
+              <div class="upload-drop-area">
+                <div class="drop-zone" id="upload-drop-zone" role="button" tabindex="0"
+                  aria-label="Drop CSV file or click to browse">
+                  <svg class="cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.338-2.32 5.75 5.75 0 011.548 11.095" />
+                  </svg>
+                  <p class="drop-zone-title">Drop your CSV file here</p>
+                  <p class="drop-zone-sub">or click to browse — supports .csv files up to 50MB</p>
+                </div>
+                <input type="file" id="upload-file-input" accept=".csv" class="hidden" />
+              </div>
+
+              <!-- Column mapper (hidden until file loaded) -->
+              <div id="upload-mapper-section" class="card hidden" style="margin-top:var(--sp-5)">
+                <div class="card-header">
+                  <span class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
+                    </svg>
+                    Column Configuration
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label>Feature Columns (select all that apply)</label>
+                  <div id="upload-feature-list"
+                    style="max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding:8px;background:var(--surface-up);border:1px solid var(--border);border-radius:var(--r-md)">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Target Column (label / fraud indicator)</label>
+                  <select id="upload-target-select"></select>
+                </div>
+                <!-- Dataset context fields injected here by upload.js -->
+                <div id="upload-context-section" style="margin-top:var(--sp-5)"></div>
+              </div>
+
+              <!-- Buttons -->
+              <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-5);flex-wrap:wrap">
+                <button class="btn btn-ghost" id="upload-demo-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="6 3 20 12 6 21" />
+                  </svg>
+                  Try with demo dataset
+                </button>
+                <button class="btn btn-primary btn-primary-lg hidden" id="upload-train-btn">
+                  Start Training →
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Progress stepper + info -->
+            <div>
+              <!-- Progress stepper (hidden until training starts) -->
+              <div id="upload-progress-section" class="card hidden">
+                <div class="card-header">
+                  <span class="card-title">Training Progress</span>
+                  <div class="spinner" id="upload-spinner"></div>
+                </div>
+                <div class="stepper" id="upload-stepper"></div>
+              </div>
+
+              <!-- Info card -->
+              <div class="card" style="margin-top:var(--sp-5)">
+                <div class="card-header">
+                  <span class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 16v-4m0-4h.01" />
+                    </svg>
+                    What's Inside
+                  </span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;color:var(--txt2)">
+                  <div style="display:flex;gap:10px;align-items:flex-start">
+                    <span style="color:var(--accent);font-weight:700;min-width:24px">4×</span>
+                    <span>ML models: Logistic Regression, SVM, Decision Tree, Neural Network</span>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start">
+                    <span style="color:var(--accent);font-weight:700;min-width:24px">5×</span>
+                    <span>Rule engine checks: amount, velocity, location, device, time-of-day</span>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start">
+                    <span style="color:var(--accent);font-weight:700;min-width:24px">∞</span>
+                    <span>Graph network intelligence: PageRank, fraud rings, shared fingerprints</span>
+                  </div>
+                  <div style="display:flex;gap:10px;align-items:flex-start">
+                    <span style="color:var(--accent);font-weight:700;min-width:24px">AI</span>
+                    <span>Plain-English narrative explanations via OpenRouter LLM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: TEST DATASET
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-testdataset" aria-label="Test Dataset — Unlabelled Prediction">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Test Dataset</h2>
+              <p>Upload an unlabelled CSV — the trained model will predict each transaction as Normal or Fraud.</p>
+            </div>
+          </div>
+
+          <!-- Session guard -->
+          <div id="td-session-guard" class="empty-state card" style="max-width:520px;margin:40px auto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <h3>No Active Session</h3>
+            <p>Train a model first via <strong>Upload Dataset</strong>, then come back here to test on new data.</p>
+          </div>
+
+          <!-- Main body (hidden until session exists) -->
+          <div id="td-body">
+
+            <!-- Upload area -->
+            <div class="td-upload-area">
+              <div class="drop-zone" id="td-drop-zone" role="button" tabindex="0"
+                aria-label="Drop unlabelled CSV file here or click to browse">
+                <svg class="cloud-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12l-3-3m0 0l-3 3m3-3v6m-1.5-15H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+                <p class="drop-zone-title">Drop your unlabelled CSV here</p>
+                <p class="drop-zone-sub" id="td-drop-label">or click to browse — no target column required</p>
+              </div>
+              <input type="file" id="td-file-input" accept=".csv" class="hidden" />
+            </div>
+
+            <!-- Error message -->
+            <div id="td-error" class="td-error-bar hidden"></div>
+
+            <!-- Spinner overlay -->
+            <div id="td-spinner-overlay" class="td-spinner-overlay hidden">
+              <div class="td-spinner-box">
+                <div class="spinner" style="width:40px;height:40px"></div>
+                <p>Running predictions…</p>
+              </div>
+            </div>
+
+            <!-- Results (hidden until prediction complete) -->
+            <div id="td-results" class="hidden">
+
+              <!-- Summary stat cards -->
+              <div class="grid-4 animate-in-stagger" style="margin:var(--sp-8) 0 var(--sp-6)">
+                <div class="stat-card accent-accent">
+                  <div class="stat-label">Total Transactions</div>
+                  <div class="stat-value mono" id="td-stat-total">—</div>
+                  <div class="stat-sub">Processed</div>
+                </div>
+                <div class="stat-card accent-anomaly">
+                  <div class="stat-label">Fraud Detected</div>
+                  <div class="stat-value mono" id="td-stat-fraud">—</div>
+                  <div class="stat-sub">Predicted fraud</div>
+                </div>
+                <div class="stat-card accent-normal">
+                  <div class="stat-label">Normal</div>
+                  <div class="stat-value mono" id="td-stat-normal">—</div>
+                  <div class="stat-sub">Predicted normal</div>
+                </div>
+                <div class="stat-card accent-ok">
+                  <div class="stat-label">Fraud Rate</div>
+                  <div class="stat-value mono" id="td-stat-rate">—</div>
+                  <div class="stat-sub">Model: <span id="td-stat-model" style="font-size:10px">—</span></div>
+                </div>
+              </div>
+
+              <!-- ── Fraud Transactions ── -->
+              <div class="td-section-header td-section-fraud">
+                <span class="td-section-dot td-dot-fraud"></span>
+                <h3>Fraud Transactions</h3>
+                <span class="badge badge-anomaly" id="td-fraud-count-badge">0</span>
+              </div>
+
+              <div id="td-fraud-empty" class="empty-state" style="padding:24px;margin-bottom:var(--sp-6)">
+                <p>No fraud transactions detected 🎉</p>
+              </div>
+              <div id="td-fraud-grid" class="td-card-grid"></div>
+
+
+
+            </div><!-- /td-results -->
+          </div><!-- /td-body -->
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           MODAL: Transaction detail
+           ══════════════════════════════════════════════════ -->
+        <div id="td-modal-overlay" class="td-modal-overlay hidden" aria-hidden="true"></div>
+        <div id="td-modal" class="td-modal hidden" role="dialog" aria-modal="true" aria-labelledby="td-modal-title">
+          <div class="td-modal-inner">
+            <!-- Modal header -->
+            <div class="td-modal-header">
+              <div>
+                <h4 id="td-modal-title">Transaction Detail</h4>
+                <div style="display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-2)">
+                  <span id="td-modal-txn-id" class="mono" style="font-size:13px;color:var(--txt2)">—</span>
+                  <span id="td-modal-verdict-badge" class="badge">—</span>
+                </div>
+              </div>
+              <button id="td-modal-close" class="td-modal-close" aria-label="Close" title="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <!-- Probability bar -->
+            <div class="td-modal-prob-section">
+              <div
+                style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-bottom:6px">
+                <span>Risk Probability</span>
+                <span id="td-modal-prob">—</span>
+              </div>
+              <div class="td-modal-prob-track">
+                <div id="td-modal-prob-bar" class="td-modal-prob-bar-fill" style="width:0%"></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--txt3);margin-top:6px">
+                <span>Confidence</span>
+                <span id="td-modal-conf">—</span>
+              </div>
+            </div>
+
+            <!-- Feature table -->
+            <div class="td-modal-features">
+              <div class="card-header" style="margin-bottom:var(--sp-3)">
+                <span class="card-title">Feature Values</span>
+              </div>
+              <div class="table-wrapper" style="max-height:360px;overflow-y:auto">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Feature</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+                  <tbody id="td-modal-features-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: DASHBOARD
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-dashboard" aria-label="Dashboard">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Model Dashboard</h2>
+              <p>Real-time model performance, risk leaderboard, and live detection feed.</p>
+            </div>
+            <div class="section-header-actions">
+              <!-- Technical / Auditor toggle -->
+              <div class="view-toggle" id="dashboard-view-toggle">
+                <button class="view-toggle-btn active" data-view="auditor">Auditor View</button>
+                <button class="view-toggle-btn" data-view="technical">Technical View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stat cards -->
+          <div class="grid-4 animate-in-stagger" style="margin-bottom:var(--sp-8)">
+            <div class="stat-card accent-accent" id="stat-best-auc">
+              <div class="stat-label">Best AUC</div>
+              <div class="stat-value mono">—</div>
+              <div class="stat-sub">Across 4 models</div>
+            </div>
+            <div class="stat-card accent-anomaly" id="stat-fraud-count">
+              <div class="stat-label">Fraud Cases</div>
+              <div class="stat-value mono">—</div>
+              <div class="stat-sub">In test set</div>
+            </div>
+            <div class="stat-card accent-normal" id="stat-normal-count">
+              <div class="stat-label">Normal Cases</div>
+              <div class="stat-value mono">—</div>
+              <div class="stat-sub">In test set</div>
+            </div>
+            <div class="stat-card accent-ok" id="stat-models-count">
+              <div class="stat-label">Models</div>
+              <div class="stat-value mono">—</div>
+              <div class="stat-sub">Trained</div>
+            </div>
+          </div>
+
+          <!-- Auditor View -->
+          <div id="dashboard-auditor-view">
+            <div class="grid-2" style="margin-bottom:var(--sp-8)">
+              <!-- Model comparison table -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Model Comparison</span>
+                </div>
+                <div class="table-wrapper">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Model</th>
+                        <th>AUC</th>
+                        <th>Accuracy</th>
+                        <th>Precision</th>
+                        <th>Recall</th>
+                        <th>F1</th>
+                        <th>Train Time</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dashboard-model-tbody">
+                      <tr>
+                        <td colspan="7" style="text-align:center;color:var(--txt3);padding:20px">Loading...</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Risk Leaderboard -->
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Risk Leaderboard</span>
+                  <span class="badge badge-accent">Top 10</span>
+                </div>
+                <div id="dashboard-leaderboard">
+                  <div class="empty-state" style="padding:24px">
+                    <p>No data yet</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live feed -->
+            <div class="card">
+              <div class="card-header">
+                <span class="card-title">
+                  <span
+                    style="width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;animation:pulse-ok 2s ease-in-out infinite"></span>
+                  Live Detection Feed
+                </span>
+                <span class="badge badge-muted">Last 10 detections</span>
+              </div>
+              <div id="dashboard-live-feed" style="display:flex;flex-direction:column;gap:5px">
+                <div style="color:var(--txt3);font-size:13px;padding:12px 0;text-align:center">
+                  Run simulations to see live feed activity
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical View -->
+          <div id="dashboard-technical-view" class="hidden">
+            <div class="grid-2" style="margin-bottom:var(--sp-6)">
+              <div class="card">
+                <div class="card-header"><span class="card-title">ROC Curves — All Models</span></div>
+                <div style="height:280px;position:relative">
+                  <canvas id="dashboard-roc-canvas"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">Precision-Recall Curves</span></div>
+                <div style="height:280px;position:relative">
+                  <canvas id="dashboard-pr-canvas"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="card">
+                <div class="card-header"><span class="card-title">Feature Importance</span></div>
+                <div style="height:280px;position:relative">
+                  <canvas id="dashboard-fi-canvas"></canvas>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">Confusion Matrix (Best Model)</span></div>
+                <div id="dashboard-cm-container"
+                  style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sp-5)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: PREDICTOR
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-predictor" aria-label="Custom transaction predictor">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Transaction Predictor</h2>
+              <p>Adjust feature sliders to analyze any transaction profile in real-time.</p>
+            </div>
+            <div class="section-header-actions">
+              <div class="view-toggle" id="predictor-view-toggle">
+                <button class="view-toggle-btn active" data-view="auditor">Auditor View</button>
+                <button class="view-toggle-btn" data-view="technical">Technical View</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auditor View -->
+          <div id="predictor-auditor-view">
+            <div class="split-layout wide-left">
+              <!-- Left: Sliders -->
+              <div>
+                <div class="card">
+                  <div class="card-header">
+                    <span class="card-title">Transaction Features</span>
+                  </div>
+
+                  <!-- Preset buttons -->
+                  <div class="preset-buttons">
+                    <button class="preset-btn fraud-preset" id="preset-fraud">🚨 Fraud Profile</button>
+                    <button class="preset-btn" id="preset-normal">✅ Normal Profile</button>
+                    <button class="preset-btn" id="preset-mean">⚖️ Mean Values</button>
+                  </div>
+
+                  <!-- Sliders -->
+                  <div id="predictor-sliders">
+                    <div class="skeleton skeleton-card" style="height:60px;margin-bottom:8px"></div>
+                    <div class="skeleton skeleton-card" style="height:60px;margin-bottom:8px"></div>
+                    <div class="skeleton skeleton-card" style="height:60px;margin-bottom:8px"></div>
+                  </div>
+
+                  <!-- Analyze button -->
+                  <button class="btn btn-primary btn-primary-lg w-full" id="predictor-analyze-btn"
+                    style="margin-top:var(--sp-5)">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    Analyze Transaction →
+                  </button>
+                </div>
+              </div>
+
+              <!-- Right: Results -->
+              <div>
+                <!-- Empty state -->
+                <div id="predictor-empty" class="empty-state card">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3>Ready to Analyze</h3>
+                  <p>Configure transaction features and click "Analyze Transaction" to see the full risk assessment.</p>
+                </div>
+
+                <!-- Result panel (hidden until first analysis) -->
+                <div id="predictor-result-panel" class="hidden"
+                  style="display:flex;flex-direction:column;gap:var(--sp-5)">
+
+                  <!-- Risk meter card -->
+                  <div class="card">
+                    <div class="card-header">
+                      <span class="card-title">Risk Assessment</span>
+                      <span id="predictor-confidence" class="badge badge-muted">— CONFIDENCE</span>
+                    </div>
+                    <div class="risk-meter-container">
+                      <!-- SVG Risk Speedometer -->
+                      <svg id="predictor-risk-svg" class="risk-meter-svg" viewBox="0 0 200 120"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <!-- Arc segments: LOW (green), MEDIUM (amber), HIGH (red) -->
+                        <!-- Low: -120° to -24° -->
+                        <path d="M 30 100 A 70 70 0 0 1 85.7 33.6" fill="none" stroke="#3DDC97" stroke-width="8"
+                          stroke-linecap="round" />
+                        <!-- Medium: -24° to +48° -->
+                        <path d="M 85.7 33.6 A 70 70 0 0 1 162.5 60.2" fill="none" stroke="#F5A623" stroke-width="8"
+                          stroke-linecap="round" />
+                        <!-- High: +48° to +120° -->
+                        <path d="M 162.5 60.2 A 70 70 0 0 1 170 100" fill="none" stroke="#FF4081" stroke-width="8"
+                          stroke-linecap="round" />
+                        <!-- Tick marks -->
+                        <line x1="100" y1="30" x2="100" y2="40" stroke="#2A2540" stroke-width="1.5" />
+                        <line x1="30" y1="100" x2="40" y2="100" stroke="#2A2540" stroke-width="1.5" />
+                        <line x1="170" y1="100" x2="160" y2="100" stroke="#2A2540" stroke-width="1.5" />
+                        <!-- Labels -->
+                        <text x="28" y="116" font-size="8" fill="#6B6492" text-anchor="middle">LOW</text>
+                        <text x="100" y="25" font-size="8" fill="#6B6492" text-anchor="middle">MED</text>
+                        <text x="172" y="116" font-size="8" fill="#6B6492" text-anchor="middle">HIGH</text>
+                        <!-- Center circle -->
+                        <circle cx="100" cy="100" r="6" fill="#1C1930" stroke="#3D3660" stroke-width="1.5" />
+                        <!-- Needle (rotates around cx=100, cy=100) -->
+                        <line class="risk-needle" id="predictor-needle" x1="100" y1="100" x2="100" y2="36"
+                          stroke="#EDE9FF" stroke-width="2" stroke-linecap="round"
+                          style="transform-origin:100px 100px; transform:rotate(-120deg); transition:transform 0.8s cubic-bezier(0.34,1.20,0.64,1)" />
+                      </svg>
+                      <div class="risk-meter-score" id="predictor-risk-score">—</div>
+                      <div class="risk-meter-band" id="predictor-risk-band">UNKNOWN RISK</div>
+
+                      <!-- Verdict badge -->
+                      <div style="margin-top:12px">
+                        <span class="badge badge-muted" id="predictor-verdict-badge"
+                          style="font-size:13px;padding:6px 16px">—</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Score breakdown -->
+                  <div class="card">
+                    <div class="card-header"><span class="card-title">Score Breakdown</span></div>
+                    <div class="score-bar-row">
+                      <span class="score-bar-label">ML Ensemble</span>
+                      <div class="score-bar-track">
+                        <div class="score-bar-fill ml" id="score-bar-ml" style="width:0%"></div>
+                      </div>
+                      <span class="score-bar-val mono" id="score-bar-ml-val">—</span>
+                    </div>
+                    <div class="score-bar-row">
+                      <span class="score-bar-label">Rule Engine</span>
+                      <div class="score-bar-track">
+                        <div class="score-bar-fill rule" id="score-bar-rule" style="width:0%"></div>
+                      </div>
+                      <span class="score-bar-val mono" id="score-bar-rule-val">—</span>
+                    </div>
+                    <div class="score-bar-row">
+                      <span class="score-bar-label">Graph Intel</span>
+                      <div class="score-bar-track">
+                        <div class="score-bar-fill graph" id="score-bar-graph" style="width:0%"></div>
+                      </div>
+                      <span class="score-bar-val mono" id="score-bar-graph-val">—</span>
+                    </div>
+
+                    <!-- Model agreement -->
+                    <div class="divider"></div>
+                    <div style="display:flex;align-items:center;gap:12px">
+                      <div class="model-dots" id="predictor-model-dots"></div>
+                      <span id="predictor-model-agreement" style="font-size:12px;color:var(--txt3)">—</span>
+                    </div>
+                  </div>
+
+                  <!-- Triggered rules -->
+                  <div class="card">
+                    <div class="card-header"><span class="card-title">Policy Rules</span></div>
+                    <div id="predictor-triggered-rules"></div>
+                  </div>
+
+                  <!-- Reason codes + LLM narrative -->
+                  <div class="card">
+                    <div class="card-header"><span class="card-title">Reason Codes</span></div>
+                    <div id="predictor-reason-codes"></div>
+                    <div class="divider"></div>
+                    <div class="card-header" style="margin-bottom:var(--sp-3)"><span class="card-title">AI
+                        Narrative</span></div>
+                    <div class="narrative-block" id="predictor-narrative">Analyzing...</div>
+                    <div class="narrative-source">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path
+                          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                      </svg>
+                      <span id="predictor-narrative-source" class="source-badge">—</span>
+                    </div>
+                  </div>
+
+                  <!-- What-if hint -->
+                  <div class="card">
+                    <div class="card-header"><span class="card-title">What-If Analysis</span></div>
+                    <div id="predictor-whatif">
+                      <div class="whatif-box" style="color:var(--txt3)">Run analysis to see risk reduction guidance.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical View -->
+          <div id="predictor-technical-view" class="hidden">
+            <div class="grid-2" style="margin-bottom:var(--sp-6)">
+              <div class="card">
+                <div class="card-header"><span class="card-title">ROC Curves</span></div>
+                <div style="height:280px"><canvas id="predictor-roc-canvas"></canvas></div>
+              </div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">Precision-Recall Curves</span></div>
+                <div style="height:280px"><canvas id="predictor-pr-canvas"></canvas></div>
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="card">
+                <div class="card-header"><span class="card-title">Feature Importance</span></div>
+                <div style="height:280px"><canvas id="predictor-fi-canvas"></canvas></div>
+              </div>
+              <div class="card">
+                <div class="card-header"><span class="card-title">Confusion Matrix</span></div>
+                <div id="predictor-cm-container"
+                  style="display:flex;align-items:center;justify-content:center;padding:var(--sp-5)"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: SIMULATOR
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-simulator" aria-label="Transaction simulator">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Transaction Simulator</h2>
+              <p>Draw random test samples and watch the models score them in real-time.</p>
+            </div>
+          </div>
+
+          <div class="grid-2" style="align-items:start">
+            <!-- Left: Controls + card -->
+            <div>
+              <div style="display:flex;gap:var(--sp-3);margin-bottom:var(--sp-5)">
+                <button class="btn btn-primary" id="sim-draw-btn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Draw Random Transaction
+                </button>
+                <button class="btn btn-toggle" id="sim-autorun-btn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="6 3 20 12 6 21" />
+                  </svg>
+                  Auto-run (every 2s)
+                </button>
+              </div>
+
+              <div id="sim-transaction-card">
+                <div class="empty-state card">
+                  <p>Click "Draw Random Transaction" to begin simulation</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: History + accuracy -->
+            <div>
+              <div class="card">
+                <div class="card-header">
+                  <span class="card-title">Rolling Accuracy</span>
+                </div>
+                <div id="sim-accuracy" style="padding:var(--sp-3) 0">
+                  <span style="font-size:13px;color:var(--txt3)">No data yet</span>
+                </div>
+              </div>
+
+              <div class="card" style="margin-top:var(--sp-5)">
+                <div class="card-header">
+                  <span class="card-title">History Strip</span>
+                  <span class="caption">Last 20 samples</span>
+                </div>
+                <div class="history-strip" id="sim-history-strip">
+                  <span style="font-size:11px;color:var(--txt3)">Empty</span>
+                </div>
+                <div style="display:flex;gap:16px;margin-top:10px;font-size:11px;color:var(--txt3)">
+                  <span><span
+                      style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--anomaly);margin-right:4px"></span>Fraud</span>
+                  <span><span
+                      style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--normal);margin-right:4px"></span>Normal</span>
+                  <span><span
+                      style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--warn);margin-right:4px;opacity:0.5"></span>Misclassified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: GLOBE
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-globe" aria-label="3D Globe visualization">
+          <!-- 3D container fills entire section -->
+          <div id="globe-container" style="width:100%;height:calc(100vh - 52px);position:relative;background:var(--bg)">
+            <!-- Loading overlay -->
+            <div id="globe-loading"
+              style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(12,10,20,0.6);z-index:10">
+              <div style="text-align:center">
+                <div class="spinner" style="margin:0 auto 12px"></div>
+                <div style="font-size:13px;color:var(--txt2)">Loading 3D globe...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls overlay (top-right) -->
+          <div class="globe-controls">
+            <button class="btn btn-ghost btn-icon" id="globe-toggle-anomalies" title="Show only anomalies">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round"
+                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29" />
+              </svg>
+              Anomalies Only
+            </button>
+            <button class="btn btn-ghost btn-icon" id="globe-reset-camera" title="Reset camera">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round"
+                  d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              Reset Camera
+            </button>
+            <button class="btn btn-primary btn-icon" id="globe-inject-btn" title="Inject custom point">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="16" />
+                <line x1="8" y1="12" x2="16" y2="12" />
+              </svg>
+              Inject Point
+            </button>
+            <button class="btn btn-ghost btn-icon" id="globe-clear-injected" title="Clear injected points">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+              </svg>
+              Clear Injected
+            </button>
+          </div>
+
+          <!-- Legend (bottom-right) -->
+          <div class="globe-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--anomaly)"></div>
+              Fraud Transaction
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--normal)"></div>
+              Normal Transaction
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:var(--accent)"></div>
+              Injected Point
+            </div>
+          </div>
+
+          <!-- Info overlay (bottom-left) -->
+          <div class="globe-info-overlay" id="globe-info-overlay">
+            <div style="font-size:11px;color:var(--txt3)">Loading PCA data...</div>
+          </div>
+
+          <!-- Inject panel (floating) -->
+          <div id="globe-inject-panel" class="hidden" style="
+          position:absolute;top:16px;left:50%;transform:translateX(-50%);
+          background:var(--surface-up);border:1px solid var(--border-mid);
+          border-radius:var(--r-xl);padding:var(--sp-6);min-width:320px;
+          box-shadow:var(--shadow-lg);z-index:var(--z-overlay);max-height:70vh;overflow-y:auto">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-5)">
+              <h4>Inject Custom Point</h4>
+              <button class="btn-icon" id="globe-inject-close"
+                style="background:none;border:none;color:var(--txt3);cursor:pointer;font-size:18px">×</button>
+            </div>
+            <div id="globe-inject-form"></div>
+            <button class="btn btn-primary w-full" id="globe-inject-submit" style="margin-top:var(--sp-4)">
+              Inject & Score →
+            </button>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: INSIGHT
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-insight" aria-label="AI insight report">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>AI Insight Report</h2>
+              <p>Plain-English model analysis for compliance officers and business stakeholders.</p>
+            </div>
+          </div>
+
+          <!-- Centered card -->
+          <div style="max-width:720px;margin:0 auto">
+            <div class="card" style="margin-bottom:var(--sp-6)">
+              <div class="card-header">
+                <span class="card-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                  AI Analysis
+                </span>
+                <span id="insight-source-badge" class="source-badge">—</span>
+              </div>
+
+              <!-- LLM Narrative -->
+              <p id="insight-narrative" style="font-size:16px;line-height:1.8;color:var(--txt)">
+                <span class="skeleton skeleton-text wide" style="height:18px;display:block;margin-bottom:8px"></span>
+                <span class="skeleton skeleton-text wide" style="height:18px;display:block;margin-bottom:8px"></span>
+                <span class="skeleton skeleton-text med" style="height:18px;display:block"></span>
+              </p>
+
+              <!-- Reliability -->
+              <div id="insight-reliability" style="margin-top:var(--sp-5);display:flex;align-items:center"></div>
+            </div>
+
+            <!-- Key stats grid -->
+            <div class="grid-4 animate-in-stagger" id="insight-key-stats" style="margin-bottom:var(--sp-6)">
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+              <div class="skeleton skeleton-card"></div>
+            </div>
+
+            <!-- Class distribution doughnut -->
+            <div class="card" style="margin-bottom:var(--sp-6)">
+              <div class="card-header"><span class="card-title">Class Distribution</span></div>
+              <div style="height:200px;position:relative">
+                <canvas id="insight-doughnut"></canvas>
+              </div>
+            </div>
+
+            <!-- Caveat box -->
+            <div id="insight-caveat" class="caveat-box hidden" style="margin-bottom:var(--sp-6)"></div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: AUDIT
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-audit" aria-label="Audit trail">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Audit Trail</h2>
+              <p>Case management and investigation decisions for compliance review.</p>
+            </div>
+            <div class="section-header-actions">
+              <button class="btn btn-ghost" id="audit-export-csv">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Export CSV
+              </button>
+              <button class="btn btn-ghost" id="audit-export-pdf">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+                Export PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="split-layout">
+            <!-- Left: Case list -->
+            <div>
+              <!-- Filter tabs -->
+              <div
+                style="display:flex;gap:4px;margin-bottom:var(--sp-4);background:var(--surface-up);border:1px solid var(--border-mid);border-radius:var(--r-md);padding:3px">
+                <button class="audit-filter-tab view-toggle-btn active" data-filter="all">All</button>
+                <button class="audit-filter-tab view-toggle-btn" data-filter="flag">Flag</button>
+                <button class="audit-filter-tab view-toggle-btn" data-filter="allow">Allow</button>
+                <button class="audit-filter-tab view-toggle-btn" data-filter="escalate">Escalate</button>
+                <button class="audit-filter-tab view-toggle-btn" data-filter="note">Note</button>
+              </div>
+
+              <!-- Case list -->
+              <div id="audit-case-list" style="max-height:calc(100vh - 200px);overflow-y:auto">
+                <div class="empty-state" style="padding:32px 16px">
+                  <p>No cases yet</p>
+                  <p class="caption">Run simulations and save interesting cases to your audit trail.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Case detail -->
+            <div>
+              <div id="audit-case-detail" class="card" style="min-height:400px">
+                <div class="empty-state">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  <h3>No Case Selected</h3>
+                  <p>Select a case from the list to review its full details and take action.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: INVESTIGATION QUEUE
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-investigation" aria-label="Investigation Queue">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Active Threats & Fraud Rings</h2>
+              <p>Review cluster-level alerts generated by Louvain community detection and investigate coordinated attacks.</p>
+            </div>
+            <div class="section-header-actions">
+              <button class="btn btn-ghost" id="investigation-refresh-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh Queue
+              </button>
+            </div>
+          </div>
+
+          <div class="split-layout">
+            <!-- Left: Ring list -->
+            <div>
+              <div id="investigation-ring-list" style="max-height:calc(100vh - 200px);overflow-y:auto">
+                <div class="empty-state" style="padding:32px 16px" id="investigation-list-empty">
+                  <p>No active fraud rings detected.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Graph & AI Summary -->
+            <div>
+              <div id="investigation-detail-panel" class="hidden">
+                <div class="card" style="margin-bottom:var(--sp-5)">
+                  <div class="card-header">
+                    <span class="card-title">Network Graph</span>
+                  </div>
+                  <div id="investigation-graph-container" style="height:350px;width:100%;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface)"></div>
+                </div>
+
+                <div class="card" style="margin-bottom:var(--sp-5)">
+                  <div class="card-header">
+                    <span class="card-title">AI Summary</span>
+                    <span class="source-badge">OpenRouter</span>
+                  </div>
+                  <div class="narrative-block" id="investigation-ai-summary" style="font-size:14px;min-height:80px">
+                    Loading summary...
+                  </div>
+                  
+                  <!-- Action Buttons -->
+                  <div style="display:flex;gap:var(--sp-3);margin-top:var(--sp-5)">
+                    <button class="btn btn-primary" id="investigation-block-btn" style="background:var(--anomaly);border-color:var(--anomaly);color:white">
+                      Block & Blacklist Cluster
+                    </button>
+                    <button class="btn btn-ghost" id="investigation-dismiss-btn">Dismiss as False Positive</button>
+                  </div>
+                </div>
+
+                <!-- Accounts list within cluster -->
+                <div class="card" style="margin-bottom:var(--sp-5)">
+                  <div class="card-header">
+                    <span class="card-title">Accounts Involved</span>
+                    <span class="badge badge-muted" id="investigation-accounts-count">—</span>
+                  </div>
+                  <div class="table-wrapper">
+                    <table id="investigation-accounts-table">
+                      <thead>
+                        <tr>
+                          <th>CC Number</th>
+                          <th>Holder</th>
+                          <th>Role</th>
+                          <th>Label</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="investigation-accounts-tbody">
+                        <tr><td colspan="5" style="text-align:center;padding:16px;color:var(--txt3)">Loading accounts...</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              <div id="investigation-empty-detail" class="card empty-state" style="min-height:400px">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="8" x2="12" y2="12" />
+                  <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <h3>Select a Fraud Ring</h3>
+                <p>Click a threat card on the left to view its network graph and AI analysis.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           SECTION: BLACKLIST
+           ══════════════════════════════════════════════════ -->
+        <section class="section" id="section-blacklist" aria-label="Organizational Blacklist">
+          <div class="section-header">
+            <div class="section-header-left">
+              <h2>Organizational Blacklist</h2>
+              <p>Directory of compromised accounts blocked from active fraud rings.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="table-wrapper">
+              <table id="blacklist-table">
+                <thead>
+                  <tr>
+                    <th>Card Number</th>
+                    <th>Account Holder</th>
+                    <th>Date Added</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="blacklist-tbody">
+                  <tr><td colspan="4" style="text-align:center;padding:24px;color:var(--txt3)">No blacklisted accounts.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════
+           MODAL: Investigation Account detail
+           ══════════════════════════════════════════════════ -->
+        <div id="inv-modal-overlay" class="td-modal-overlay hidden" aria-hidden="true"></div>
+        <div id="inv-modal" class="td-modal hidden" role="dialog" aria-modal="true" aria-labelledby="inv-modal-title">
+          <div class="td-modal-inner">
+            <div class="td-modal-header">
+              <div>
+                <h4 id="inv-modal-title">Account Details</h4>
+                <div style="display:flex;align-items:center;gap:var(--sp-3);margin-top:var(--sp-2)">
+                  <span id="inv-modal-cc" class="mono" style="font-size:13px;color:var(--txt2)">—</span>
+                  <span id="inv-modal-badge" class="badge">—</span>
+                </div>
+              </div>
+              <button id="inv-modal-close" class="td-modal-close" aria-label="Close" title="Close">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <div class="td-modal-features">
+              <div class="card-header" style="margin-bottom:var(--sp-3)">
+                <span class="card-title">Feature Snapshot</span>
+              </div>
+              <div class="table-wrapper" style="max-height:360px;overflow-y:auto">
+                <table>
+                  <thead>
+                    <tr><th>Feature</th><th>Value</th></tr>
+                  </thead>
+                  <tbody id="inv-modal-features-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /sections-container -->
+    </main><!-- /main -->
+  </div><!-- /app -->
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <!-- App JS (module) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

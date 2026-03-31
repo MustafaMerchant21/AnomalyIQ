@@ -1,0 +1,285 @@
+/* ============================================================
+   base.css — AnomalyIQ Design System
+   Reset · CSS Custom Properties · Typography · Scrollbars
+   ============================================================ */
+
+/* ── Google Fonts Import ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ── CSS Custom Properties ──────────────────────────────────
+   ALL colours derive from this palette.
+   NO hardcoded hex outside :root.
+   ──────────────────────────────────────────────────────────── */
+:root {
+  /* Background layers */
+  --bg:          #0C0A14;
+  --surface:     #131121;
+  --surface-up:  #1C1930;
+
+  /* Borders */
+  --border:      #2A2540;
+  --border-mid:  #3D3660;
+  --border-hi:   #6B5FC7;
+
+  /* Accent */
+  --accent:      #9C6FFF;
+  --accent-dim:  #6B4DB8;
+
+  /* Status indicators */
+  --anomaly:     #FF4081;
+  --normal:      #69FCFF;
+  --warn:        #F5A623;
+  --ok:          #3DDC97;
+
+  /* Text */
+  --txt:         #EDE9FF;
+  --txt2:        #A89ED6;
+  --txt3:        #6B6492;
+
+  /* Spacing scale */
+  --sp-1:  4px;
+  --sp-2:  8px;
+  --sp-3:  12px;
+  --sp-4:  16px;
+  --sp-5:  20px;
+  --sp-6:  24px;
+  --sp-8:  32px;
+  --sp-10: 40px;
+
+  /* Border radius */
+  --r-sm:  4px;
+  --r-md:  8px;
+  --r-lg:  12px;
+  --r-xl:  16px;
+  --r-2xl: 24px;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.6);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.4);
+  --shadow-lg:  0 10px 30px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+  --shadow-accent: 0 0 20px rgba(156,111,255,0.25);
+  --shadow-anomaly: 0 0 20px rgba(255,64,129,0.3);
+
+  /* Transitions */
+  --t-fast:   0.15s ease;
+  --t-base:   0.25s ease;
+  --t-slow:   0.4s ease;
+
+  /* Z-index layers */
+  --z-base:    1;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+}
+
+/* ── Reset ───────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--txt);
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography ──────────────────────────────────────────── */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  color: var(--txt2);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--txt);
+  line-height: 1.2;
+}
+
+h1 { font-size: 28px; font-weight: 700; }
+h2 { font-size: 22px; }
+h3 { font-size: 18px; }
+h4 { font-size: 15px; }
+h5 { font-size: 13px; }
+h6 { font-size: 12px; font-weight: 500; letter-spacing: 0.02em; text-transform: uppercase; color: var(--txt3); }
+
+p {
+  color: var(--txt2);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--t-fast);
+}
+
+a:hover {
+  color: var(--txt);
+}
+
+/* Metric numbers */
+.mono, .metric-value {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-weight: 600;
+  color: var(--txt);
+}
+
+/* Feature / code names */
+code, .code-name, .feature-name {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--accent);
+  font-size: 0.9em;
+  background: rgba(156,111,255,0.08);
+  padding: 1px 5px;
+  border-radius: var(--r-sm);
+}
+
+pre, .code-block {
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--surface-up);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  overflow-x: auto;
+  font-size: 13px;
+  color: var(--txt);
+}
+
+/* Labels and captions */
+.label, label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--txt3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.caption {
+  font-size: 12px;
+  color: var(--txt3);
+}
+
+/* ── Custom Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-mid);
+  border-radius: 99px;
+  transition: background var(--t-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dim);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-mid) var(--bg);
+}
+
+/* ── Selection ───────────────────────────────────────────── */
+::selection {
+  background: rgba(156,111,255,0.3);
+  color: var(--txt);
+}
+
+/* ── Focus ───────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Utility classes ─────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-accent  { color: var(--accent); }
+.text-anomaly { color: var(--anomaly); }
+.text-normal  { color: var(--normal); }
+.text-warn    { color: var(--warn); }
+.text-ok      { color: var(--ok); }
+.text-muted   { color: var(--txt3); }
+.text-sm      { font-size: 12px; }
+.text-xs      { font-size: 11px; }
+.text-lg      { font-size: 16px; }
+
+.flex         { display: flex; }
+.flex-col     { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-1        { gap: var(--sp-1); }
+.gap-2        { gap: var(--sp-2); }
+.gap-3        { gap: var(--sp-3); }
+.gap-4        { gap: var(--sp-4); }
+
+.w-full       { width: 100%; }
+.h-full       { height: 100%; }
+
+.mt-1 { margin-top: var(--sp-1); }
+.mt-2 { margin-top: var(--sp-2); }
+.mt-3 { margin-top: var(--sp-3); }
+.mt-4 { margin-top: var(--sp-4); }
+.mt-6 { margin-top: var(--sp-6); }
+
+.mb-1 { margin-bottom: var(--sp-1); }
+.mb-2 { margin-bottom: var(--sp-2); }
+.mb-3 { margin-bottom: var(--sp-3); }
+.mb-4 { margin-bottom: var(--sp-4); }
+.mb-6 { margin-bottom: var(--sp-6); }
+
+.p-4  { padding: var(--sp-4); }
+.p-6  { padding: var(--sp-6); }
+
+.hidden { display: none !important; }
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--sp-4) 0;
+}
+
+/* Section heading */
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--txt3);
+  margin-bottom: var(--sp-4);
+}

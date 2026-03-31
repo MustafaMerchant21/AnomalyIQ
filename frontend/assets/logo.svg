@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <!-- Hexagonal anomaly icon -->
+  <polygon points="20,4 34,4 40,16 34,28 20,28 14,16" fill="none" stroke="#9C6FFF" stroke-width="2"/>
+  <polygon points="20,8 32,8 38,16 32,24 20,24 14,16" fill="rgba(156,111,255,0.12)"/>
+  <!-- Inner pulse dot -->
+  <circle cx="26" cy="16" r="3.5" fill="#9C6FFF"/>
+  <circle cx="26" cy="16" r="6" fill="none" stroke="#FF4081" stroke-width="1" opacity="0.7"/>
+  <!-- Scan lines -->
+  <line x1="14" y1="16" x2="40" y2="16" stroke="#9C6FFF" stroke-width="0.5" opacity="0.4"/>
+  <line x1="20" y1="4" x2="20" y2="28" stroke="#9C6FFF" stroke-width="0.5" opacity="0.3"/>
+  <line x1="34" y1="4" x2="34" y2="28" stroke="#9C6FFF" stroke-width="0.5" opacity="0.3"/>
+
+  <!-- Wordmark: AnomalyIQ -->
+  <text x="50" y="22" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#EDE9FF" letter-spacing="-0.3">Anomaly</text>
+  <text x="143" y="22" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#9C6FFF" letter-spacing="-0.3">IQ</text>
+
+  <!-- Subtitle -->
+  <text x="50" y="36" font-family="Inter, sans-serif" font-size="9" font-weight="400" fill="#6B6492" letter-spacing="0.08em">FRAUD DETECTION</text>
+</svg>
