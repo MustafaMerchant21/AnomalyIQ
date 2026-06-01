@@ -1,0 +1,149 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2200 720" role="img" aria-labelledby="title desc">
+  <title id="title">AnomalyIQ architecture diagram</title>
+  <desc id="desc">A left-to-right architecture diagram showing retrieval, validation, scoring, reports, and dashboard output.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#41464d" />
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#8a98a8" flood-opacity="0.22" />
+    </filter>
+    <style>
+      .bg { fill: #f5f8fc; }
+      .line { stroke: #41464d; stroke-width: 4; fill: none; marker-end: url(#arrow); stroke-linecap: round; stroke-linejoin: round; }
+      .label { font-family: "Segoe Print", "Comic Sans MS", "Trebuchet MS", Arial, sans-serif; fill: #ffffff; }
+      .title { font-size: 34px; font-weight: 700; }
+      .big { font-size: 28px; font-weight: 700; }
+      .med { font-size: 21px; }
+      .small { font-size: 18px; fill: rgba(255,255,255,0.84); }
+      .darkText { fill: #f8fbff; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="2200" height="720" />
+
+  <g filter="url(#shadow)">
+    <rect x="18" y="12" width="600" height="330" rx="28" ry="28" fill="none" stroke="#41464d" stroke-width="4" stroke-dasharray="16 14" />
+    <rect x="52" y="88" width="234" height="228" rx="28" ry="28" fill="#129b6f" />
+    <rect x="318" y="88" width="272" height="228" rx="28" ry="28" fill="#6d46e7" />
+    <rect x="36" y="378" width="250" height="228" rx="28" ry="28" fill="#129b6f" />
+    <rect x="318" y="378" width="250" height="228" rx="28" ry="28" fill="#6d46e7" />
+
+    <rect x="694" y="82" width="640" height="506" rx="28" ry="28" fill="#40464d" />
+    <rect x="740" y="178" width="550" height="92" rx="18" ry="18" fill="#8a411d" stroke="#d08a66" stroke-width="2" />
+    <rect x="740" y="316" width="550" height="92" rx="18" ry="18" fill="#8a411d" stroke="#d08a66" stroke-width="2" />
+    <rect x="740" y="454" width="550" height="92" rx="18" ry="18" fill="#8a411d" stroke="#d08a66" stroke-width="2" />
+
+    <rect x="1370" y="80" width="220" height="506" rx="28" ry="28" fill="#7c460f" />
+
+    <rect x="1640" y="70" width="170" height="126" rx="28" ry="28" fill="#4e4b48" />
+    <rect x="1640" y="255" width="170" height="126" rx="28" ry="28" fill="#4e4b48" />
+    <rect x="1640" y="440" width="170" height="126" rx="28" ry="28" fill="#4e4b48" />
+
+    <rect x="1940" y="184" width="230" height="260" rx="28" ry="28" fill="#2678cc" />
+  </g>
+
+  <text class="label big" x="76" y="60" fill="#41464d">Retrieval Augmented Generation (RAG)</text>
+
+  <text class="label big" x="169" y="166" text-anchor="middle">
+    <tspan x="169" dy="0">Policy</tspan>
+    <tspan x="169" dy="38">Document</tspan>
+  </text>
+  <text class="label med" x="169" y="252" text-anchor="middle">
+    <tspan x="169" dy="0">PDF / Free text</tspan>
+    <tspan x="169" dy="24">rules</tspan>
+  </text>
+
+  <text class="label big" x="454" y="162" text-anchor="middle">
+    <tspan x="454" dy="0">Rule Extraction</tspan>
+    <tspan x="454" dy="38">Engine</tspan>
+  </text>
+  <text class="label med" x="454" y="250" text-anchor="middle">
+    <tspan x="454" dy="0">LLM parses policy</tspan>
+    <tspan x="454" dy="24">text</tspan>
+  </text>
+
+  <text class="label big" x="161" y="455" text-anchor="middle">
+    <tspan x="161" dy="0">Structured</tspan>
+    <tspan x="161" dy="38">Dataset</tspan>
+  </text>
+  <text class="label med" x="161" y="542" text-anchor="middle">
+    <tspan x="161" dy="0">CSV / Database</tspan>
+  </text>
+
+  <text class="label big" x="443" y="455" text-anchor="middle">
+    <tspan x="443" dy="0">Data</tspan>
+    <tspan x="443" dy="38">Loader</tspan>
+  </text>
+  <text class="label med" x="443" y="542" text-anchor="middle">
+    <tspan x="443" dy="0">Records into</tspan>
+    <tspan x="443" dy="24">memory</tspan>
+  </text>
+
+  <text class="label title" x="1014" y="150" text-anchor="middle">Compliance Validation Engine</text>
+
+  <text class="label big" x="1014" y="222" text-anchor="middle">
+    <tspan x="1014" dy="0">Rule Engine</tspan>
+  </text>
+  <text class="label med" x="1014" y="256" text-anchor="middle">
+    <tspan x="1014" dy="0">Rule checking for every record, threshold checks,</tspan>
+    <tspan x="1014" dy="24">etc.</tspan>
+  </text>
+
+  <text class="label big" x="1014" y="360" text-anchor="middle">
+    <tspan x="1014" dy="0">Graph Engine</tspan>
+  </text>
+  <text class="label med" x="1014" y="394" text-anchor="middle">
+    <tspan x="1014" dy="0">Cycle, Hub, cluster</tspan>
+  </text>
+
+  <text class="label big" x="1014" y="500" text-anchor="middle">
+    <tspan x="1014" dy="0">Behavioral Engine</tspan>
+  </text>
+  <text class="label med" x="1014" y="534" text-anchor="middle">
+    <tspan x="1014" dy="0">Anomaly Detection</tspan>
+  </text>
+
+  <text class="label title" x="1480" y="242" text-anchor="middle">
+    <tspan x="1480" dy="0">Risk</tspan>
+    <tspan x="1480" dy="44">Score</tspan>
+    <tspan x="1480" dy="44">Validator</tspan>
+  </text>
+  <text class="label med" x="1480" y="415" text-anchor="middle" fill="#f1cb7f">
+    <tspan x="1480" dy="0">Combined</tspan>
+    <tspan x="1480" dy="24">score ranging</tspan>
+    <tspan x="1480" dy="24">from 0-100</tspan>
+  </text>
+
+  <text class="label big" x="1725" y="118" text-anchor="middle">
+    <tspan x="1725" dy="0">Audit</tspan>
+    <tspan x="1725" dy="30">Trail</tspan>
+  </text>
+  <text class="label big" x="1725" y="304" text-anchor="middle">
+    <tspan x="1725" dy="0">Violation</tspan>
+    <tspan x="1725" dy="30">Report</tspan>
+  </text>
+  <text class="label big" x="1725" y="488" text-anchor="middle">
+    <tspan x="1725" dy="0">Risk</tspan>
+    <tspan x="1725" dy="30">Leaderboard</tspan>
+  </text>
+
+  <text class="label title" x="2055" y="308" text-anchor="middle">Dashboard</text>
+
+  <line class="line" x1="286" y1="202" x2="318" y2="202" />
+  <line class="line" x1="590" y1="202" x2="694" y2="202" />
+  <line class="line" x1="286" y1="492" x2="318" y2="492" />
+  <line class="line" x1="569" y1="492" x2="694" y2="430" />
+
+  <line class="line" x1="1334" y1="226" x2="1370" y2="226" />
+  <line class="line" x1="1334" y1="362" x2="1370" y2="362" />
+  <line class="line" x1="1334" y1="498" x2="1370" y2="498" />
+
+  <line class="line" x1="1590" y1="136" x2="1640" y2="136" />
+  <line class="line" x1="1590" y1="320" x2="1640" y2="320" />
+  <line class="line" x1="1590" y1="504" x2="1640" y2="504" />
+
+  <line class="line" x1="1810" y1="136" x2="1940" y2="254" />
+  <line class="line" x1="1810" y1="320" x2="1940" y2="320" />
+  <line class="line" x1="1810" y1="504" x2="1940" y2="390" />
+</svg>
