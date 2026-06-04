@@ -14,10 +14,16 @@
 
 AnomalyIQ is a full-stack anomaly and fraud intelligence demo that blends machine learning, rule-based signals, graph analysis, and explainable insights to surface suspicious activity and support investigations.
 
+---
+
+> 🚀 <b>Update</b>: More features set to release soon...
+
+---
+
 ## Architecture
 
 <p align="center">
-  <img src="frontend/assets/architecture.svg" alt="AnomalyIQ architecture diagram" width="1000" />
+  <img src="frontend/assets/AnomalyIQ Architecture.png" alt="AnomalyIQ architecture diagram" width="1000" />
 </p>
 
 ## Highlights
@@ -64,3 +70,7 @@ AnomalyIQ is a full-stack anomaly and fraud intelligence demo that blends machin
 | ![Org Blacklist](frontend/assets/UI/blacklist.png) | |
 
 </details>
+
+---
+
+> ⭐ If you find this project useful or interesting, consider starring the repo.
