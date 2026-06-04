@@ -27,31 +27,6 @@ AnomalyIQ is a full-stack anomaly and fraud intelligence demo that blends machin
 - Interactive workflows for upload, prediction, simulation, and investigation
 - Lightweight stack with a FastAPI backend and vanilla JavaScript frontend
 
-## Quick Start
-
-```bash
-cd backend
-uvicorn main:app --reload --port 8000
-```
-
-Then open the frontend in `frontend/index.html` after the API is running.
-
-## Built With
-
-<p align="center">
-  <img src="https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white" alt="scikit-learn" />
-  <img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow" />
-  <img src="https://img.shields.io/badge/NetworkX-2E7D32?style=for-the-badge&logo=python&logoColor=white" alt="NetworkX" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Vanilla%20JS-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="Vanilla JS" />
-  <img src="https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="Chart.js" />
-  <img src="https://img.shields.io/badge/Three.js-000000?style=for-the-badge&logo=threedotjs&logoColor=white" alt="Three.js" />
-  <img src="https://img.shields.io/badge/jsPDF-1E88E5?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="jsPDF" />
-</p>
-
 ## Screenshots
 
 <details>
